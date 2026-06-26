@@ -21,7 +21,6 @@ export default function App() {
   const [error, setError] = useState("");
   const [form, setForm] = useState(DEFAULT_FORM);
   const [completedText, setCompletedText] = useState("4, 4, 4, 3");
-  const [rpe, setRpe] = useState("7");
   const [copyStatus, setCopyStatus] = useState("");
 
   useEffect(() => {
@@ -47,12 +46,12 @@ export default function App() {
   const progression = useMemo(() => {
     if (!data || !protocol) return null;
     return evaluateProgression({
+      targetSets: form.sets,
       targetReps: form.reps,
       completedReps: normalizeCompletedReps(completedText),
-      rpe,
       data,
     });
-  }, [completedText, data, form.reps, protocol, rpe]);
+  }, [completedText, data, form.reps, form.sets, protocol]);
 
   const exportText = useMemo(() => {
     if (!protocol) return "";
@@ -134,18 +133,12 @@ export default function App() {
 
             <div className="card ca2">
               <div className="section-title">Progression Engine</div>
-              <div className="row">
-                <div style={{ flex: 2 }}>
-                  <label>Reps completate</label>
-                  <input type="text" value={completedText} onChange={event => setCompletedText(event.target.value)} placeholder="4, 4, 4, 3" />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label>RPE</label>
-                  <input type="number" min="1" max="10" step="0.5" value={rpe} onChange={event => setRpe(event.target.value)} />
-                </div>
-              </div>
+              <label>Reps completate</label>
+              <input type="text" value={completedText} onChange={event => setCompletedText(event.target.value)} placeholder="5, 5, 5, 5, 4" />
               <div className="ibox">
                 <strong>{progression?.rule?.label || "Pronto"}</strong>
+                <br />
+                Target {progression?.targetReps || 0} reps - completate {progression?.completedReps || 0} - mancanti {progression?.missingReps || 0}
                 <br />
                 {progression?.rule?.suggestion || "Inserisci le reps completate."}
               </div>
@@ -186,7 +179,7 @@ export default function App() {
                 ) : (
                   <div className="protocol">
                     <h1>{protocol.title}</h1>
-                    <ProtocolBlock title="Mobilità" items={protocol.pattern.mobility.map(item => `${item.name} × ${item.reps || item.duration}`)} />
+                    <ProtocolBlock title="Mobilita" items={protocol.pattern.mobility.map(item => `${item.name} × ${item.reps || item.duration}`)} />
                     <ProtocolBlock title="Attivazione" items={protocol.pattern.activation.map(item => `${item.name} × ${item.reps || item.duration}`)} />
                     <ProtocolBlock title="Ramping" items={protocol.ramping.map(formatLoadLine)} />
                     <ProtocolBlock title="Work Set" items={protocol.workSets.map(set => formatWorkSetLine(set.load, set.reps))} />

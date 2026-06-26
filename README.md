@@ -1,4 +1,4 @@
-﻿# TheGymme Ramping System
+# TheGymme Ramping System
 
 Web app/PWA React per generare protocolli di ramping per esercizi fondamentali.
 
@@ -8,7 +8,7 @@ L'app permette di:
 - generare sempre un output ordinato in Mobilita, Attivazione, Ramping, Work Set, Recuperi, Cues Tecnici, Over 40 Notes e Suggerimento prossima seduta;
 - calcolare i carichi di ramping da percentuali definite nei JSON;
 - arrotondare i carichi ai 2,5 kg secondo configurazione;
-- valutare le reps completate con un Progression Engine configurabile;
+- valutare le reps completate con un Progression Engine oggettivo e configurabile;
 - copiare un export testo pronto per Notion, WhatsApp o appunti.
 
 ## Versione app
@@ -114,11 +114,12 @@ public/data/progression/progression_rules.json
 
 Regole MVP configurate:
 
-- tutte completate con RPE <= 6: aumenta +5 kg;
 - tutte completate: aumenta +2,5 kg;
 - manca 1 rep totale: ripeti stesso peso e schema;
 - mancano 2-3 reps: consolida, stesso peso oppure 5x3;
-- cedimento evidente: deload -5% oppure volume ridotto.
+- mancano 4+ reps: cedimento evidente, deload -5% oppure volume ridotto.
+
+Il calcolo usa sempre lo schema target completo. Per esempio, su `5x5`, l'input `3, 2, 4, 2, 4` viene letto come 15 reps completate su 25, quindi 10 reps mancanti e regola di cedimento evidente.
 
 ## Sviluppo locale
 

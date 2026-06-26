@@ -1,16 +1,6 @@
 {
   "rules": [
     {
-      "id": "all_completed_easy",
-      "label": "Tutte completate facili",
-      "when": {
-        "missingRepsMin": 0,
-        "missingRepsMax": 0,
-        "rpeMax": 6
-      },
-      "suggestion": "- Aumenta di +5 kg nella prossima seduta."
-    },
-    {
       "id": "all_completed",
       "label": "Tutte completate",
       "when": {

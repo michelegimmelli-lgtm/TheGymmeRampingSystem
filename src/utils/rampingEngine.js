@@ -57,19 +57,21 @@ export const buildProtocol = ({ exerciseKey, targetKg, sets, reps, data }) => {
   };
 };
 
-export const evaluateProgression = ({ targetReps, completedReps, rpe, data }) => {
+export const evaluateProgression = ({ targetSets, targetReps, completedReps, data }) => {
   const rules = data?.progressionRules?.rules || [];
-  const target = completedReps.length * Math.max(1, parseInt(targetReps, 10) || 1);
-  const completed = completedReps.reduce((sum, rep) => sum + Math.max(0, parseInt(rep, 10) || 0), 0);
+  const repsPerSet = Math.max(1, parseInt(targetReps, 10) || 1);
+  const setCount = Math.max(1, parseInt(targetSets, 10) || 1);
+  const target = setCount * repsPerSet;
+  const completed = completedReps
+    .slice(0, setCount)
+    .reduce((sum, rep) => sum + Math.min(Math.max(0, parseInt(rep, 10) || 0), repsPerSet), 0);
   const missing = Math.max(0, target - completed);
-  const parsedRpe = clampNumber(rpe, null);
 
   const matchedRule = rules.find(rule => {
     const missingMin = clampNumber(rule.when?.missingRepsMin, 0);
     const missingMax = clampNumber(rule.when?.missingRepsMax, Number.MAX_SAFE_INTEGER);
-    const rpeMax = rule.when?.rpeMax == null ? Number.MAX_SAFE_INTEGER : clampNumber(rule.when.rpeMax);
 
-    return missing >= missingMin && missing <= missingMax && (parsedRpe == null || parsedRpe <= rpeMax);
+    return missing >= missingMin && missing <= missingMax;
   });
 
   return {
@@ -91,9 +93,9 @@ export const buildExportText = protocol => {
   if (!protocol) return "";
 
   return [
-    `🏋️ ${protocol.title}`,
+    `THEGYMME ${protocol.title}`,
     "",
-    "Mobilità",
+    "Mobilita",
     movementText(protocol.pattern.mobility),
     "",
     "Attivazione",
