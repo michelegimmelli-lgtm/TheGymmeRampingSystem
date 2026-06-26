@@ -1,0 +1,31 @@
+{
+  "mobility": [
+    { "name": "Lat Stretch", "reps": "10+10" },
+    { "name": "Scap Circle", "reps": "10" }
+  ],
+  "activation": [
+    { "name": "Scap Pull Up", "reps": "8" },
+    { "name": "Hollow Hold", "duration": "20\"" }
+  ],
+  "ramping": [
+    { "percentage": 0.25, "reps": 6 },
+    { "percentage": 0.5, "reps": 4 },
+    { "percentage": 0.7, "reps": 2 }
+  ],
+  "recoveries": [
+    "60-90\" tra attivazioni.",
+    "90-150\" tra ramping.",
+    "2-3' tra work set."
+  ],
+  "cues": [
+    "Parti dalle scapole.",
+    "Costole giu.",
+    "Gomiti verso le tasche.",
+    "Controlla la discesa."
+  ],
+  "over40Notes": [
+    "Evita rimbalzi in basso.",
+    "Usa assistenza se perdi controllo scapolare.",
+    "Mantieni ripetizioni pulite prima di caricare."
+  ]
+}

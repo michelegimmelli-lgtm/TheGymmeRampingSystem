@@ -1,0 +1,32 @@
+{
+  "mobility": [
+    { "name": "Wall Slide", "reps": "10" },
+    { "name": "Lat Stretch", "reps": "8+8" }
+  ],
+  "activation": [
+    { "name": "Band External Rotation", "reps": "12+12" },
+    { "name": "Dead Bug", "reps": "8+8" }
+  ],
+  "ramping": [
+    { "percentage": 0.3, "reps": 8 },
+    { "percentage": 0.5, "reps": 5 },
+    { "percentage": 0.65, "reps": 3 },
+    { "percentage": 0.8, "reps": 1 }
+  ],
+  "recoveries": [
+    "60\" tra attivazioni.",
+    "90-150\" tra ramping.",
+    "2-3' tra work set."
+  ],
+  "cues": [
+    "Glutei stretti e costole giu.",
+    "Bilanciere vicino al viso.",
+    "Testa attraverso a fine spinta.",
+    "Lockout stabile."
+  ],
+  "over40Notes": [
+    "Non forzare overhead se manca mobilita toracica.",
+    "Mantieni addome attivo.",
+    "Ferma la serie se compensi con lombare."
+  ]
+}

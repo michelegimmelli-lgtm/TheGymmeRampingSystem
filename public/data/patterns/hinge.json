@@ -1,0 +1,32 @@
+{
+  "mobility": [
+    { "name": "Hip Hinge Drill", "reps": "10" },
+    { "name": "Hamstring Floss", "reps": "10+10" }
+  ],
+  "activation": [
+    { "name": "Bird Dog", "reps": "8+8" },
+    { "name": "Glute Bridge Hold", "duration": "20\"" }
+  ],
+  "ramping": [
+    { "percentage": 0.35, "reps": 6 },
+    { "percentage": 0.55, "reps": 4 },
+    { "percentage": 0.7, "reps": 3 },
+    { "percentage": 0.85, "reps": 1 }
+  ],
+  "recoveries": [
+    "60-90\" dopo attivazione.",
+    "2' tra ramping pesanti.",
+    "3-5' tra work set."
+  ],
+  "cues": [
+    "Ascelle chiuse e dorsali attivi.",
+    "Bilanciere vicino al corpo.",
+    "Spingi il pavimento, non tirare di schiena.",
+    "Chiudi alto senza iperestendere."
+  ],
+  "over40Notes": [
+    "Evita strappi da freddo.",
+    "Ogni ramping deve sembrare pulito.",
+    "Riduci range o volume se senti tensione lombare."
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "mobility": [
+    { "name": "T-Spine Extension", "reps": "10" },
+    { "name": "Band Pec Opener", "reps": "12+12" }
+  ],
+  "activation": [
+    { "name": "Scap Push Up", "reps": "12" },
+    { "name": "Band Pull Apart", "reps": "15" }
+  ],
+  "ramping": [
+    { "percentage": 0.35, "reps": 8 },
+    { "percentage": 0.5, "reps": 5 },
+    { "percentage": 0.65, "reps": 3 },
+    { "percentage": 0.8, "reps": 2 }
+  ],
+  "recoveries": [
+    "60\" tra attivazioni.",
+    "90-150\" tra ramping.",
+    "2-4' tra work set."
+  ],
+  "cues": [
+    "Scapole addotte e depresse.",
+    "Piedi fermi e leg drive progressivo.",
+    "Polsi sopra gomiti.",
+    "Tocca controllato, spingi aggressivo."
+  ],
+  "over40Notes": [
+    "Spalle calde prima di caricare.",
+    "Nessun rimbalzo sul petto.",
+    "Se la spalla pizzica, riduci arco o scegli presa piu stretta."
+  ]
+}

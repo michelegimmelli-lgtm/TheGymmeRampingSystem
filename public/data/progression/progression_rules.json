@@ -1,0 +1,55 @@
+{
+  "rules": [
+    {
+      "id": "all_completed_easy",
+      "label": "Tutte completate facili",
+      "when": {
+        "missingRepsMin": 0,
+        "missingRepsMax": 0,
+        "rpeMax": 6
+      },
+      "suggestion": "- Aumenta di +5 kg nella prossima seduta."
+    },
+    {
+      "id": "all_completed",
+      "label": "Tutte completate",
+      "when": {
+        "missingRepsMin": 0,
+        "missingRepsMax": 0
+      },
+      "suggestion": "- Aumenta di +2,5 kg nella prossima seduta."
+    },
+    {
+      "id": "missing_one",
+      "label": "Manca 1 rep totale",
+      "when": {
+        "missingRepsMin": 1,
+        "missingRepsMax": 1
+      },
+      "suggestion": "- Ripeti stesso peso e stesso schema."
+    },
+    {
+      "id": "missing_two_three",
+      "label": "Mancano 2-3 reps",
+      "when": {
+        "missingRepsMin": 2,
+        "missingRepsMax": 3
+      },
+      "suggestion": "- Consolida: stesso peso oppure variante 5x3."
+    },
+    {
+      "id": "clear_failure",
+      "label": "Cedimento evidente",
+      "when": {
+        "missingRepsMin": 4,
+        "missingRepsMax": 999
+      },
+      "suggestion": "- Deload -5% oppure volume ridotto nella prossima seduta."
+    }
+  ],
+  "fallback": {
+    "id": "fallback",
+    "label": "Valutazione manuale",
+    "suggestion": "- Ripeti il carico e valuta tecnica, velocita e recuperi."
+  }
+}

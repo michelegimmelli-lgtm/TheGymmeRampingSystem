@@ -1,0 +1,32 @@
+{
+  "mobility": [
+    { "name": "Cat Camel", "reps": "10" },
+    { "name": "Affondi Stretch", "reps": "10+10" }
+  ],
+  "activation": [
+    { "name": "Glute Bridge", "reps": "15" },
+    { "name": "Plank", "duration": "30\"" }
+  ],
+  "ramping": [
+    { "percentage": 0.3, "reps": 8 },
+    { "percentage": 0.5, "reps": 5 },
+    { "percentage": 0.65, "reps": 3 },
+    { "percentage": 0.8, "reps": 2 }
+  ],
+  "recoveries": [
+    "60-90\" tra mobilita e attivazione.",
+    "90-150\" tra le serie di ramping.",
+    "2-4' tra i work set."
+  ],
+  "cues": [
+    "Piede pieno a terra.",
+    "Ginocchia seguono la linea delle punte.",
+    "Brace prima di scendere.",
+    "Spingi il pavimento via."
+  ],
+  "over40Notes": [
+    "Nessuna rep grindata.",
+    "Recupero completo.",
+    "Se anche o ginocchia sono rigide, aggiungi una serie leggera tecnica."
+  ]
+}

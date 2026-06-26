@@ -1,0 +1,34 @@
+{
+  "back_squat": {
+    "name": "Back Squat",
+    "pattern": "squat"
+  },
+  "front_squat": {
+    "name": "Front Squat",
+    "pattern": "squat"
+  },
+  "deadlift": {
+    "name": "Deadlift",
+    "pattern": "hinge"
+  },
+  "romanian_deadlift": {
+    "name": "Romanian Deadlift",
+    "pattern": "hinge"
+  },
+  "bench_press": {
+    "name": "Bench Press",
+    "pattern": "horizontal_push"
+  },
+  "military_press": {
+    "name": "Military Press",
+    "pattern": "vertical_push"
+  },
+  "barbell_row": {
+    "name": "Barbell Row",
+    "pattern": "horizontal_pull"
+  },
+  "pull_up": {
+    "name": "Pull Up",
+    "pattern": "vertical_pull"
+  }
+}

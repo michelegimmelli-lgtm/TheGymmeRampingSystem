@@ -1,0 +1,32 @@
+{
+  "mobility": [
+    { "name": "T-Spine Rotation", "reps": "8+8" },
+    { "name": "Hip Hinge Drill", "reps": "10" }
+  ],
+  "activation": [
+    { "name": "Band Row", "reps": "15" },
+    { "name": "Prone Y Raise", "reps": "10" }
+  ],
+  "ramping": [
+    { "percentage": 0.35, "reps": 8 },
+    { "percentage": 0.5, "reps": 5 },
+    { "percentage": 0.65, "reps": 3 },
+    { "percentage": 0.8, "reps": 2 }
+  ],
+  "recoveries": [
+    "60\" tra attivazioni.",
+    "90\" tra ramping.",
+    "2-3' tra work set."
+  ],
+  "cues": [
+    "Torace stabile.",
+    "Tira con gomiti, non con mani.",
+    "Pausa breve in chiusura.",
+    "Schiena neutra."
+  ],
+  "over40Notes": [
+    "Non trasformare la remata in uno strappo.",
+    "Mantieni respirazione e brace.",
+    "Riduci carico se perdi posizione lombare."
+  ]
+}

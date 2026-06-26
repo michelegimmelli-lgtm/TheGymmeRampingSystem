@@ -1,0 +1,120 @@
+const clampNumber = (value, fallback = 0) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+export const roundLoad = (load, rounding) => {
+  const increment = clampNumber(rounding?.incrementKg, 2.5);
+  const mode = rounding?.mode || "nearest";
+  const value = clampNumber(load);
+  const scaled = value / increment;
+
+  if (mode === "down") return Math.floor(scaled) * increment;
+  if (mode === "up") return Math.ceil(scaled) * increment;
+  return Math.round(scaled) * increment;
+};
+
+export const formatKg = value => {
+  const fixed = Number(value).toFixed(1);
+  return fixed.endsWith(".0") ? fixed.slice(0, -2) : fixed.replace(".", ",");
+};
+
+export const formatPercent = value => `${Math.round(clampNumber(value) * 100)}%`;
+
+export const formatLoadLine = ({ load, reps, percentage }) =>
+  `${formatKg(load)} kg × ${reps} (${formatPercent(percentage)})`;
+
+export const formatWorkSetLine = (load, reps) => `${formatKg(load)} kg × ${reps}`;
+
+export const buildProtocol = ({ exerciseKey, targetKg, sets, reps, data }) => {
+  const exercise = data.exercises[exerciseKey];
+  const pattern = exercise ? data.patterns[exercise.pattern] : null;
+
+  if (!exercise || !pattern) {
+    return null;
+  }
+
+  const safeSets = Math.max(1, parseInt(sets, 10) || 1);
+  const safeReps = Math.max(1, parseInt(reps, 10) || 1);
+  const safeTarget = Math.max(0, clampNumber(targetKg));
+
+  const ramping = (pattern.ramping || []).map(step => ({
+    ...step,
+    load: roundLoad(safeTarget * clampNumber(step.percentage), data.rounding),
+  }));
+
+  const workSets = Array.from({ length: safeSets }, () => ({
+    load: safeTarget,
+    reps: safeReps,
+  }));
+
+  return {
+    title: `${exercise.name} ${safeSets}x${safeReps} @ ${formatKg(safeTarget)} kg`,
+    exercise,
+    pattern,
+    ramping,
+    workSets,
+  };
+};
+
+export const evaluateProgression = ({ targetReps, completedReps, rpe, data }) => {
+  const rules = data?.progressionRules?.rules || [];
+  const target = completedReps.length * Math.max(1, parseInt(targetReps, 10) || 1);
+  const completed = completedReps.reduce((sum, rep) => sum + Math.max(0, parseInt(rep, 10) || 0), 0);
+  const missing = Math.max(0, target - completed);
+  const parsedRpe = clampNumber(rpe, null);
+
+  const matchedRule = rules.find(rule => {
+    const missingMin = clampNumber(rule.when?.missingRepsMin, 0);
+    const missingMax = clampNumber(rule.when?.missingRepsMax, Number.MAX_SAFE_INTEGER);
+    const rpeMax = rule.when?.rpeMax == null ? Number.MAX_SAFE_INTEGER : clampNumber(rule.when.rpeMax);
+
+    return missing >= missingMin && missing <= missingMax && (parsedRpe == null || parsedRpe <= rpeMax);
+  });
+
+  return {
+    missingReps: missing,
+    completedReps: completed,
+    targetReps: target,
+    rule: matchedRule || data?.progressionRules?.fallback,
+  };
+};
+
+const listText = items => (items || []).map(item => `- ${item}`).join("\n");
+
+const movementText = items =>
+  (items || [])
+    .map(item => `- ${item.name} × ${item.reps || item.duration}`)
+    .join("\n");
+
+export const buildExportText = protocol => {
+  if (!protocol) return "";
+
+  return [
+    `🏋️ ${protocol.title}`,
+    "",
+    "Mobilità",
+    movementText(protocol.pattern.mobility),
+    "",
+    "Attivazione",
+    movementText(protocol.pattern.activation),
+    "",
+    "Ramping",
+    protocol.ramping.map(formatLoadLine).map(line => `- ${line}`).join("\n"),
+    "",
+    "Work Set",
+    protocol.workSets.map(set => `- ${formatWorkSetLine(set.load, set.reps)}`).join("\n"),
+    "",
+    "Recuperi",
+    listText(protocol.pattern.recoveries),
+    "",
+    "Cues Tecnici",
+    listText(protocol.pattern.cues),
+    "",
+    "Over 40 Notes",
+    listText(protocol.pattern.over40Notes),
+    "",
+    "Suggerimento prossima seduta",
+    protocol.progressionSuggestion || "- Inserisci le reps completate per generare il suggerimento.",
+  ].join("\n");
+};
