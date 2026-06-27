@@ -4,6 +4,8 @@ import { buildProtocol, evaluateProgression, formatLoadLine, formatWorkSetLine }
 import { loadRampingData } from "./utils/rampingData";
 
 const MAX_COMPLETED_REP_CELLS = 8;
+const PREVIOUS_SUGGESTION_STORAGE_PREFIX = "thegymme.previousSuggestion.";
+const SUGGESTION_FALLBACK = "Inserisci le reps completate per generare il suggerimento.";
 
 const DEFAULT_FORM = {
   exerciseKey: "back_squat",
@@ -30,7 +32,9 @@ export default function App() {
   const [error, setError] = useState("");
   const [form, setForm] = useState(DEFAULT_FORM);
   const [completedReps, setCompletedReps] = useState(() => buildDefaultCompletedReps(DEFAULT_FORM.sets, DEFAULT_FORM.reps));
+  const [previousSuggestion, setPreviousSuggestion] = useState("");
   const previousTargetRepsRef = useRef(DEFAULT_FORM.reps);
+  const lastSuggestionRef = useRef("");
 
   useEffect(() => {
     let mounted = true;
@@ -82,6 +86,31 @@ export default function App() {
       data,
     });
   }, [completedReps, data, protocol, targetRepCount, visibleSetCount]);
+
+  const currentSuggestion = progression?.rule?.suggestion || "";
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const storageKey = `${PREVIOUS_SUGGESTION_STORAGE_PREFIX}${form.exerciseKey}`;
+    const storedSuggestion = window.localStorage.getItem(storageKey) || "";
+    setPreviousSuggestion(storedSuggestion);
+    lastSuggestionRef.current = storedSuggestion;
+  }, [form.exerciseKey]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !currentSuggestion) return;
+
+    const storageKey = `${PREVIOUS_SUGGESTION_STORAGE_PREFIX}${form.exerciseKey}`;
+    const lastSuggestion = lastSuggestionRef.current || window.localStorage.getItem(storageKey) || "";
+
+    if (lastSuggestion && lastSuggestion !== currentSuggestion) {
+      setPreviousSuggestion(lastSuggestion);
+    }
+
+    window.localStorage.setItem(storageKey, currentSuggestion);
+    lastSuggestionRef.current = currentSuggestion;
+  }, [currentSuggestion, form.exerciseKey]);
 
   const exercises = data
     ? Object.entries(data.exercises).map(([key, exercise]) => ({ key, ...exercise }))
@@ -186,7 +215,13 @@ export default function App() {
                     <ProtocolBlock title="Recuperi" items={protocol.pattern.recoveries} />
                     <ProtocolBlock title="Cues Tecnici" items={protocol.pattern.cues} />
                     <ProtocolBlock title="Over 40 Notes" items={protocol.pattern.over40Notes} />
-                    <ProtocolBlock title="Suggerimento prossima seduta" items={[progression?.rule?.suggestion || "Inserisci le reps completate per generare il suggerimento."]} />
+                    <ProtocolBlock
+                      title="Suggerimenti sedute"
+                      items={[
+                        `Seduta precedente: ${previousSuggestion || "Nessun suggerimento precedente salvato."}`,
+                        `Prossima seduta: ${currentSuggestion || SUGGESTION_FALLBACK}`,
+                      ]}
+                    />
                   </div>
                 )}
               </div>
