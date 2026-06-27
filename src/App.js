@@ -16,6 +16,12 @@ const positiveInt = (value, fallback = 1) => Math.max(1, parseInt(value, 10) || 
 
 const clampSetCount = value => Math.min(MAX_COMPLETED_REP_CELLS, positiveInt(value));
 
+const normalizeSetInput = value => {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (!digits) return "";
+  return String(Math.min(MAX_COMPLETED_REP_CELLS, positiveInt(digits)));
+};
+
 const buildDefaultCompletedReps = (sets, reps) =>
   Array.from({ length: clampSetCount(sets) }, () => positiveInt(reps));
 
@@ -83,7 +89,7 @@ export default function App() {
 
   const updateField = event => {
     const { name, value } = event.target;
-    const nextValue = name === "sets" ? clampSetCount(value) : value;
+    const nextValue = name === "sets" ? normalizeSetInput(value) : value;
     setForm(prev => ({ ...prev, [name]: nextValue }));
   };
 
@@ -137,7 +143,7 @@ export default function App() {
                 </div>
                 <div>
                   <label>Serie</label>
-                  <input name="sets" type="number" min="1" max={MAX_COMPLETED_REP_CELLS} value={form.sets} onChange={updateField} />
+                  <input name="sets" type="text" inputMode="numeric" pattern="[0-9]*" value={form.sets} onChange={updateField} />
                 </div>
                 <div>
                   <label>Ripetizioni</label>
@@ -193,7 +199,7 @@ export default function App() {
           <div className="reps-grid">
             {completedReps.map((value, index) => (
               <div className="rep-cell" key={`completed-rep-${index}`}>
-                <span>Set {index + 1}</span>
+                <span>Serie {index + 1}</span>
                 <input
                   type="number"
                   min="0"
@@ -211,7 +217,8 @@ export default function App() {
             <br />
             {progression?.rule?.suggestion || "Inserisci le reps completate."}
           </div>
-        </div>      </main>
+        </div>
+      </main>
     </>
   );
 }
@@ -228,5 +235,4 @@ function ProtocolBlock({ title, items }) {
     </section>
   );
 }
-
 

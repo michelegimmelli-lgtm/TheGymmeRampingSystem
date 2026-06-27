@@ -117,7 +117,7 @@ Regole MVP configurate:
 - tutte completate: aumenta +2,5 kg;
 - manca 1 rep totale: ripeti stesso peso e schema;
 - mancano 2-3 reps: consolida, stesso peso oppure 5x3;
-- mancano 4+ reps: cedimento evidente, deload -5% oppure volume ridotto.
+- mancano 4+ reps: cedimento evidente, deload -5% oppure volume ridotto con progressione di tecnica.
 
 Il calcolo usa sempre lo schema target completo. Per esempio, su `5x5`, l'input `3, 2, 4, 2, 4` viene letto come 15 reps completate su 25, quindi 10 reps mancanti e regola di cedimento evidente.
 
@@ -216,3 +216,4 @@ public/data/patterns/*.json
 public/data/progression/progression_rules.json
 public/data/settings/rounding.json
 ```
+

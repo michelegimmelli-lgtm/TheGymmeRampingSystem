@@ -34,7 +34,7 @@
         "missingRepsMin": 4,
         "missingRepsMax": 999
       },
-      "suggestion": "- Deload -5% oppure volume ridotto nella prossima seduta."
+      "suggestion": "- Deload -5% oppure volume ridotto con progressione di tecnica nella prossima seduta."
     }
   ],
   "fallback": {
@@ -43,3 +43,4 @@
     "suggestion": "- Ripeti il carico e valuta tecnica, velocita e recuperi."
   }
 }
+
