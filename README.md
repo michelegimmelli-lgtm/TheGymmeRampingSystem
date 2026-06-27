@@ -9,7 +9,7 @@ L'app permette di:
 - calcolare i carichi di ramping da percentuali definite nei JSON;
 - arrotondare i carichi ai 2,5 kg secondo configurazione;
 - valutare le reps completate con un Progression Engine oggettivo e configurabile;
-- copiare un export testo pronto per Notion, WhatsApp o appunti.
+- valutare ogni serie con celle reps modificabili, fino a 8 serie.
 
 ## Versione app
 

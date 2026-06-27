@@ -202,22 +202,6 @@ textarea:focus {
   opacity: 0.85;
 }
 
-.bcta {
-  padding: 13px 16px;
-  font-size: 15px;
-  color: #fff;
-  background: linear-gradient(90deg, #6366f1, #ec4899);
-  border-radius: 14px;
-}
-
-.btn-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-
 .ibox {
   margin-top: 10px;
   padding: 8px 12px;
@@ -315,22 +299,45 @@ textarea:focus {
   line-height: 1.35;
 }
 
-.export-box {
-  min-height: 320px;
-  resize: vertical;
-  font-family: "Segoe UI", system-ui, sans-serif;
-  line-height: 1.35;
-}
-
-.copy-status {
-  font-size: 12px;
-  font-weight: 700;
-  color: #16a34a;
-}
-
 .empty {
   padding: 16px 0;
   font-size: 13px;
   text-align: center;
   color: #94a3b8;
 }
+
+.reps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.rep-cell {
+  min-width: 0;
+}
+
+.rep-cell span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #64748b;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.rep-cell input {
+  height: 48px;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: 900;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .reps-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+

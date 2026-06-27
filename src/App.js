@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { APP_VERSION } from "./appConfig";
-import { buildExportText, buildProtocol, evaluateProgression, formatLoadLine, formatWorkSetLine } from "./utils/rampingEngine";
+import { buildProtocol, evaluateProgression, formatLoadLine, formatWorkSetLine } from "./utils/rampingEngine";
 import { loadRampingData } from "./utils/rampingData";
+
+const MAX_COMPLETED_REP_CELLS = 8;
 
 const DEFAULT_FORM = {
   exerciseKey: "back_squat",
@@ -10,18 +12,19 @@ const DEFAULT_FORM = {
   reps: 4,
 };
 
-const normalizeCompletedReps = value =>
-  String(value || "")
-    .split(/[,\s]+/)
-    .map(item => parseInt(item, 10))
-    .filter(Number.isFinite);
+const positiveInt = (value, fallback = 1) => Math.max(1, parseInt(value, 10) || fallback);
+
+const clampSetCount = value => Math.min(MAX_COMPLETED_REP_CELLS, positiveInt(value));
+
+const buildDefaultCompletedReps = (sets, reps) =>
+  Array.from({ length: clampSetCount(sets) }, () => positiveInt(reps));
 
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [form, setForm] = useState(DEFAULT_FORM);
-  const [completedText, setCompletedText] = useState("4, 4, 4, 3");
-  const [copyStatus, setCopyStatus] = useState("");
+  const [completedReps, setCompletedReps] = useState(() => buildDefaultCompletedReps(DEFAULT_FORM.sets, DEFAULT_FORM.reps));
+  const previousTargetRepsRef = useRef(DEFAULT_FORM.reps);
 
   useEffect(() => {
     let mounted = true;
@@ -43,23 +46,36 @@ export default function App() {
     return buildProtocol({ ...form, data });
   }, [data, form]);
 
+  const visibleSetCount = clampSetCount(form.sets);
+  const targetRepCount = positiveInt(form.reps);
+
+  useEffect(() => {
+    const previousTargetReps = previousTargetRepsRef.current;
+
+    setCompletedReps(prev =>
+      Array.from({ length: visibleSetCount }, (_, index) => {
+        const current = prev[index];
+        const parsed = parseInt(current, 10);
+
+        if (!Number.isFinite(parsed)) return targetRepCount;
+        if (previousTargetReps !== targetRepCount && parsed === previousTargetReps) return targetRepCount;
+
+        return current;
+      })
+    );
+
+    previousTargetRepsRef.current = targetRepCount;
+  }, [targetRepCount, visibleSetCount]);
+
   const progression = useMemo(() => {
     if (!data || !protocol) return null;
     return evaluateProgression({
-      targetSets: form.sets,
-      targetReps: form.reps,
-      completedReps: normalizeCompletedReps(completedText),
+      targetSets: visibleSetCount,
+      targetReps: targetRepCount,
+      completedReps,
       data,
     });
-  }, [completedText, data, form.reps, form.sets, protocol]);
-
-  const exportText = useMemo(() => {
-    if (!protocol) return "";
-    return buildExportText({
-      ...protocol,
-      progressionSuggestion: progression?.rule?.suggestion || "",
-    });
-  }, [progression, protocol]);
+  }, [completedReps, data, protocol, targetRepCount, visibleSetCount]);
 
   const exercises = data
     ? Object.entries(data.exercises).map(([key, exercise]) => ({ key, ...exercise }))
@@ -67,17 +83,16 @@ export default function App() {
 
   const updateField = event => {
     const { name, value } = event.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    const nextValue = name === "sets" ? clampSetCount(value) : value;
+    setForm(prev => ({ ...prev, [name]: nextValue }));
   };
 
-  const copyExport = async () => {
-    try {
-      await navigator.clipboard.writeText(exportText);
-      setCopyStatus("Copiato");
-      window.setTimeout(() => setCopyStatus(""), 1400);
-    } catch {
-      setCopyStatus("Copia manuale dal box export");
-    }
+  const updateCompletedRep = (index, value) => {
+    setCompletedReps(prev => {
+      const next = [...prev];
+      next[index] = value === "" ? "" : Math.max(0, parseInt(value, 10) || 0);
+      return next;
+    });
   };
 
   if (error) {
@@ -122,7 +137,7 @@ export default function App() {
                 </div>
                 <div>
                   <label>Serie</label>
-                  <input name="sets" type="number" min="1" value={form.sets} onChange={updateField} />
+                  <input name="sets" type="number" min="1" max={MAX_COMPLETED_REP_CELLS} value={form.sets} onChange={updateField} />
                 </div>
                 <div>
                   <label>Ripetizioni</label>
@@ -131,27 +146,6 @@ export default function App() {
               </div>
             </div>
 
-            <div className="card ca2">
-              <div className="section-title">Progression Engine</div>
-              <label>Reps completate</label>
-              <input type="text" value={completedText} onChange={event => setCompletedText(event.target.value)} placeholder="5, 5, 5, 5, 4" />
-              <div className="ibox">
-                <strong>{progression?.rule?.label || "Pronto"}</strong>
-                <br />
-                Target {progression?.targetReps || 0} reps - completate {progression?.completedReps || 0} - mancanti {progression?.missingReps || 0}
-                <br />
-                {progression?.rule?.suggestion || "Inserisci le reps completate."}
-              </div>
-            </div>
-
-            <div className="card ca3">
-              <div className="section-title">Export Notion / WhatsApp</div>
-              <textarea className="export-box" readOnly value={exportText} />
-              <div className="btn-row">
-                <button className="btn bcta" onClick={copyExport} style={{ flex: 1 }}>Copia testo</button>
-                {copyStatus ? <span className="copy-status">{copyStatus}</span> : null}
-              </div>
-            </div>
           </section>
 
           <section>
@@ -193,7 +187,31 @@ export default function App() {
             </div>
           </section>
         </div>
-      </main>
+        <div className="card ca2">
+          <div className="section-title">Auto.Feedback Progressione</div>
+          <label>Reps completate</label>
+          <div className="reps-grid">
+            {completedReps.map((value, index) => (
+              <div className="rep-cell" key={`completed-rep-${index}`}>
+                <span>Set {index + 1}</span>
+                <input
+                  type="number"
+                  min="0"
+                  max={targetRepCount}
+                  value={value}
+                  onChange={event => updateCompletedRep(index, event.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="ibox">
+            <strong>{progression?.rule?.label || "Pronto"}</strong>
+            <br />
+            Target {progression?.targetReps || 0} reps - completate {progression?.completedReps || 0} - mancanti {progression?.missingReps || 0}
+            <br />
+            {progression?.rule?.suggestion || "Inserisci le reps completate."}
+          </div>
+        </div>      </main>
     </>
   );
 }
@@ -210,3 +228,5 @@ function ProtocolBlock({ title, items }) {
     </section>
   );
 }
+
+
